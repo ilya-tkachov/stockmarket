@@ -54,7 +54,9 @@ class stock(object):
 
     def createaxis(self):
         spacer = self.rectx
+        yspacer = self.recty 
         ylocation =  self.recty + self.recty/1.8
+        newylocation = self.recty + self.recty/1.8
         xlist = []
         for i in range(0,53,4):
             xlist.append(i)
@@ -65,6 +67,14 @@ class stock(object):
                 spacer = spacer + self.rectwidth // 60
             self.screen.blit(newtextsurface,(spacer,ylocation))
             spacer += self.rectwidth // 17
-            
+        ylist = []
+        for a in range(50,101,50):
+            ylist.append(a)
+        for q in ylist:
+            companyyaxis = pygame.font.SysFont("arial",self.rectwidth//24)
+            ytextsurface = companyyaxis.render(str(q),True,(255,0,0))
+            newylocation -= self.rectwidth / 7.05
+            self.screen.blit(ytextsurface,(yspacer,newylocation))
+
             
                
