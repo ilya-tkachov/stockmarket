@@ -19,7 +19,7 @@ class stock(object):
         pygame.draw.rect(self.screen,rectcolour,(self.rectx,self.recty,self.rectwidth,self.rectheight))
         companytext = pygame.font.SysFont("arial",self.rectwidth // 10)
         textsurface = companytext.render(self.companyname,True,(255,0,0))
-        textsurface_rect = textsurface.get_rect(center = (self.rectx + self.rectwidth//2,self.recty + self.rectheight + self.rectheight//10))
+        textsurface_rect = textsurface.get_rect(center = (self.rectx + self.rectwidth//2,self.recty + self.rectheight + self.rectheight//5))
         self.screen.blit(textsurface,textsurface_rect)
         
 
@@ -27,7 +27,7 @@ class stock(object):
         n = 0
         x = self.rectx
         y = self.recty + (self.rectheight//2)
-        print(x,y)
+        #print(x,y)
         weeklyoutcome = []
         for i in range(80):
             i = random.randrange(-100,100)
@@ -46,10 +46,25 @@ class stock(object):
                 y2 = int(y+length*math.sin(d))
                 n+= 1
                 pygame.draw.line(self.screen,self.linecolour,(x,y),(x2,y2),width)
-                print(d)
-                pygame.time.delay(100)
+                #print(d)
+                pygame.time.delay(0)
                 x = x2
                 y = y2
                 pygame.display.update()
-               
 
+    def createaxis(self):
+        spacer = self.rectx
+        ylocation =  self.recty + self.recty/1.8
+        xlist = []
+        for i in range(0,53,4):
+            xlist.append(i)
+        for z in xlist:
+            companyxaxis = pygame.font.SysFont("arial",self.rectwidth // 24)
+            newtextsurface = companyxaxis.render(str(z),True,(255,0,0))
+            if len(str(z)) > 1:
+                spacer = spacer + self.rectwidth // 60
+            self.screen.blit(newtextsurface,(spacer,ylocation))
+            spacer += self.rectwidth // 17
+            
+            
+               
