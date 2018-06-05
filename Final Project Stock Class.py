@@ -45,7 +45,7 @@ class stock(object): #Initial stock class that will create the visual display of
                 y2 = int(y+length*math.sin(d))
                 n+= 1 #Increments the paramater by a value of 1 through each line drawn
                 pygame.draw.line(self.screen,self.linecolour,(x,y),(x2,y2),width) #Code that draws the line onto the screen
-                pygame.time.delay(0) #Delays events in ms everytime the line is drawn
+                pygame.time.delay(10) #Delays events in ms everytime the line is drawn
                 x = x2 #Starts the next line on the endpoints of the previous line
                 y = y2
                 if y2 >= self.recty: #Ensures the line never crosses above the rectangle
@@ -80,7 +80,7 @@ class stock(object): #Initial stock class that will create the visual display of
             
 class Button(object): #Button class that will be used to create a button that can be displayed anywhere and used
 
-    def __init__(self,screen,buttonrect,fillcolor = (69,139,0), bordercolor = (0,0,0),textsize =24): #Initializes the key parameters of the button class
+    def __init__(self,screen,buttonrect,fillcolor = (69,139,0), bordercolor = (0,0,0),text = ""): #Initializes the key parameters of the button class
         self.screen = screen
         self.buttonrectx = buttonrect[0]
         self.buttonrecty = buttonrect[1]
@@ -88,4 +88,15 @@ class Button(object): #Button class that will be used to create a button that ca
         self.buttonrectheight = buttonrect[3]
         self.fillcolor = fillcolor
         self.bordercolor = bordercolor
-        self.textsize = textsize
+        self.text = text
+
+    def createbutton(self):
+        pygame.draw.rect(self.screen,self.fillcolor,(self.buttonrectx,self.buttonrecty,self.buttonrectwidth,self.buttonrectheight))
+        displaytext = pygame.font.SysFont("arial",self.buttonrectheight//4)
+        buttontextsurface = displaytext.render("Testing",True,(255,0,0))
+        textsurface_rect = buttontextsurface.get_rect(center= (self.buttonrectx + self.buttonrectwidth//2, self.buttonrecty + self.buttonrectheight//2))
+        self.screen.blit(buttontextsurface,textsurface_rect)
+        
+        
+
+    
