@@ -15,8 +15,16 @@ WHITE = (248,248,255)
 
 win = pygame.display.set_mode((1200,800))
 win.fill(WHITE)
-test = stockclass.stock(win,(300,300,600,200),"Automax",BLACK,0,0)
+
+## Creates the visual stock data##
+test = stockclass.stock(win,(300,200,650,300),"Automax",BLACK,0,0)
 test.createdatadisplay(GREEN)
 test.createvisualdata(3)
 test.createaxis()
+##------------------------------##
+
+##Creates the Buttons for the screen##
+buttontest =  stockclass.Button(win,(60,100,200,200))
+buttontest.createbutton()
+
 pygame.display.update()
