@@ -23,34 +23,25 @@ class stock(object): #Initial stock class that will create the visual display of
         self.screen.blit(textsurface,textsurface_rect) #Blits the text onto the screen (textsurface, (x,y))
         
 
-    def createvisualdata(self,width): #Creates the line that represents the fluctuation of stock data over time
-        n = 0 #Parameter that will be used to stop the line from drawing at a certain point
+    def createvisualdata(self,weeklyoutcome): #Creates the line that represents the fluctuation of stock data over time
+        width = 3
         x = self.rectx #initial x value of the line
         y = self.recty + (self.rectheight//2) #Initial y value of the line (starts at the left most center of the rectangle
-        weeklyoutcome = [] #empty list that will be used for the stock data
-        for i in range(80): #Creates a list of 80 integers with values that range from -100 to 100
-            i = random.randrange(-100,100)
-            weeklyoutcome.append(i) #appends each i character to the list
         d = (-math.pi/4) #Initial angle of the stock 
-        if n == 10: #When the n parameter reaches the value of 10, it will return false to stop drawing the line
-            return False
-        else:
-            for i in weeklyoutcome: #For loop to iterate through the list containing stock info for that given company
-                if i < 0 and d < 0: #Ensures that the line will go up and down depending on the stock data
-                    d = -1 * d 
-                elif d > 0 and i > 0:
-                    d = -1 * d 
-                length = self.rectwidth// 52 #Length of each drawn line
-                x2 = int(x+length*math.cos(d)) #Determines the end points of the line being drawn
-                y2 = int(y+length*math.sin(d))
-                n+= 1 #Increments the paramater by a value of 1 through each line drawn
-                pygame.draw.line(self.screen,self.linecolour,(x,y),(x2,y2),width) #Code that draws the line onto the screen
-                pygame.time.delay(10) #Delays events in ms everytime the line is drawn
-                x = x2 #Starts the next line on the endpoints of the previous line
-                y = y2
-                if y2 >= self.recty: #Ensures the line never crosses above the rectangle
-                    i = 0
-                pygame.display.update() #Updates display
+        for i in weeklyoutcome: #For loop to iterate through the list containing stock info for that given company
+            if i < 0 and d < 0: #Ensures that the line will go up and down depending on the stock data
+                d = -1 * d 
+            elif d > 0 and i > 0:
+                d = -1 * d 
+            length = self.rectwidth// 52 #Length of each drawn line
+            x2 = int(x+length*math.cos(d)) #Determines the end points of the line being drawn
+            y2 = int(y+length*math.sin(d))
+            pygame.draw.line(self.screen,self.linecolour,(x,y),(x2,y2),width) #Code that draws the line onto the screen
+            pygame.time.delay(0) #Delays events in ms everytime the line is drawn
+            x = x2 #Starts the next line on the endpoints of the previous line
+            y = y2
+            if y2 >= self.recty: #Ensures the line never crosses above the rectangle
+                y2 = 100
 
     def createaxis(self): #Creates the x and y axis for the rectangle
         spacer = self.rectx #The x location for the values in the x axis
@@ -90,12 +81,20 @@ class Button(object): #Button class that will be used to create a button that ca
         self.bordercolor = bordercolor
         self.text = text
 
-    def createbutton(self):
-        pygame.draw.rect(self.screen,self.fillcolor,(self.buttonrectx,self.buttonrecty,self.buttonrectwidth,self.buttonrectheight))
-        displaytext = pygame.font.SysFont("arial",self.buttonrectheight//4)
+    def createbutton(self,x,y):
+        pygame.draw.rect(self.screen,self.fillcolor,(x,y,self.buttonrectwidth,self.buttonrectheight))
+        displaytext = pygame.font.SysFont("arial",self.buttonrectheight//2)
         buttontextsurface = displaytext.render("Testing",True,(255,0,0))
-        textsurface_rect = buttontextsurface.get_rect(center= (self.buttonrectx + self.buttonrectwidth//2, self.buttonrecty + self.buttonrectheight//2))
+        textsurface_rect = buttontextsurface.get_rect(center= (x + self.buttonrectwidth//2, y + self.buttonrectheight//2))
         self.screen.blit(buttontextsurface,textsurface_rect)
+
+    def buttonclick(self,x,y,position):
+        if (x + self.buttonrectwidth) >= position[0] >= x and (y + self.buttonrectheight) >= position[1] >= y:
+            return True
+        else:
+            return False
+
+    
         
         
 
