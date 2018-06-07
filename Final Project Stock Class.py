@@ -36,12 +36,17 @@ class stock(object): #Initial stock class that will create the visual display of
             length = self.rectwidth// 52 #Length of each drawn line
             x2 = int(x+length*math.cos(d)) #Determines the end points of the line being drawn
             y2 = int(y+length*math.sin(d))
+            if y2 < self.recty: #Prevents the line from drawing outside of the rectangle
+                y2 = self.recty
+            elif y2 > self.recty + self.rectheight:
+                y2 = self.recty + self.rectheight
             pygame.draw.line(self.screen,self.linecolour,(x,y),(x2,y2),width) #Code that draws the line onto the screen
             pygame.time.delay(0) #Delays events in ms everytime the line is drawn
             x = x2 #Starts the next line on the endpoints of the previous line
             y = y2
-            if y2 >= self.recty: #Ensures the line never crosses above the rectangle
-                y2 = 100
+
+            #if y2 >= self.recty: #Ensures the line never crosses above the rectangle
+                #y2 = 100
 
     def createaxis(self): #Creates the x and y axis for the rectangle
         spacer = self.rectx #The x location for the values in the x axis
@@ -90,12 +95,42 @@ class Button(object): #Button class that will be used to create a button that ca
 
     def buttonclick(self,x,y,position):
         if (x + self.buttonrectwidth) >= position[0] >= x and (y + self.buttonrectheight) >= position[1] >= y:
+            print("clicked")
             return True
         else:
+            print("Not clicked")
             return False
 
     
         
+class Bankaccount(object):
+
+    def __init__(self,screen,startingmoney,currentfunds):
+        self.screen = screen
+        self.startingmoney = startingmoney
+        self.currentfunds = currentfunds
+
+    def initialfunds(self):
+        self.currentfunds = self.currentfunds + self.startingmoney
+        #print(self.currentfunds)
+        return self.currentfunds
+
+    def addfunds(self,sharevalue,amountofshares):
+        self.currentfunds = self.currentfunds + (sharevalue*amountofshares)
+        #print(self.currentfunds)
+        return self.currentfunds
+
+    def subtractfunds(self,sharevalue,sharespurchased):
+        self.currentfunds = self.currentfunds - (sharevalue * sharespurchased)
+        #print(self.currentfunds)
+        return self.currentfunds
+
+    def displaycurrentfunds(self):
+        #print(self.currentfunds)
+        displaytext = pygame.font.SysFont("arial",24)
+        screensurface = displaytext.render(("Current Funds" + "   " + str(self.currentfunds)),True,(255,0,0))
+        self.screen.blit(screensurface,(400,600))
+        #pygame.display.update()
         
 
     
