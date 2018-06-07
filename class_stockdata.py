@@ -26,8 +26,11 @@ class stock_market(object):
 #
 
 class accum_stock(object):
-    def __init__(self,ticker):
+    def __init__(self,ticker,rt_price,rt_vol,rt_time):
         self.ticker = ticker
+        self.rt_price = rt_price
+        self.rt_vol = rt_vol
+        self.rt_time = rt_time
         self.data = []
         
     def add_data(self,data):
@@ -42,8 +45,8 @@ class accum_stock(object):
         return self.ticker
     __repr__ = __str__
         
-class stock_data(accum_stock):
-    def __init__(self,date_time,val_open,val_close,volume):
+class stock_data(accum_stock): #ability to retrieve database prices
+    def __init__(self,date_time,val_open,val_close,volume): 
         self.name = date_time
         self.val_open = val_open
         self.val_close = val_close
