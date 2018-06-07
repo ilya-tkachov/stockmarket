@@ -21,7 +21,6 @@ win.fill(WHITE)
 #WINDOW AND WHILE LOOP VARIABLES
 
 ## Creates the visual stock data##
-
 weeklyoutcome = [] #empty list that will be used for the stock data
 for i in range(80): #Creates a list of 80 integers with values that range from -100 to 100
     i = random.randrange(-100,100)
@@ -39,20 +38,22 @@ while inmenu:
             print(setposition)
             buttontest.buttonclick(440,550,setposition)
             buttontest.buttonclick(440,350,setposition)
-            buttontest.buttonclick(440,150,setposition)
-##            if (buttontest.buttonclick(60,550,setposition)) == True :
-##                inmenu = False
-##                ingame = True
+            mainscreenbutton = (buttontest.buttonclick(440,150,setposition))
+            if mainscreenbutton == True:
+                inmenu = False
+                ingame = True
+##          
     pygame.display.update()
-
     
 while ingame:
-
+    win.fill(WHITE)
+    ##Creates the stock data for the screen##
     test = stockclass.stock(win,(500,100,650,300),"Automax",BLACK,0,0)
     test.createdatadisplay(GREEN)
     test.createvisualdata(weeklyoutcome)
     test.createaxis()
-    pygame.display.update()
+    #pygame.display.update()
+    ##-------------------------------------##
 
 
     ##Creates the Buttons for the screen##
@@ -66,11 +67,19 @@ while ingame:
             buttontest.buttonclick(60,550,setposition)
             buttontest.buttonclick(60,350,setposition)
             buttontest.buttonclick(60,150,setposition)
+    ##----------------------------------##
 
-
+    ##Manages the user bank information##
+    userbank =  stockclass.Bankaccount(win,1000,0)
+    userbank.initialfunds()
+    userbank.addfunds(2.30,200)
+    userbank.displaycurrentfunds()
+    userbank.addfunds(200,2)
+    userbank.displaycurrentfunds()
+    pygame.display.update()
         
             
-    ##----------------------------------##
+    ##---------------------------------##
 
 
     pygame.display.update()
