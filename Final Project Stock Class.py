@@ -131,6 +131,9 @@ class Bankaccount(object):
         screensurface = displaytext.render(("Current Funds" + "   " + str(self.currentfunds)),True,(255,0,0))
         self.screen.blit(screensurface,(400,600))
         #pygame.display.update()
+
+    def changingfunds(self): #Prevents previous data from being shown on screen
+        pygame.draw.rect(self.screen,(248,248,255),(400,600,200,50))
         
 
     
