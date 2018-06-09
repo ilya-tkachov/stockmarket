@@ -22,7 +22,11 @@ time = print() #realtime time
 smbls = 8576
 exclude = ["atest","ntest", "test", "z", "cbx",".","$","HJLI"]
 
-quotes = {"S&P100":[],"S&P100":[]}
+north_america = []
+asia = []
+europe = []
+quotes = {"S&P500":[],"FTSE100":[],"NASDAQ_RANDOM_500":generate_numbers(smbls),"NASDAQ_RANDOM_100":generate_numbers(smbls)}
+#######CURRENCY CONVERTER
 
 #http://pandas.pydata.org/pandas-docs/version/0.12/io.html
 def generate_numbers(smbls):
@@ -37,9 +41,8 @@ def generate_numbers(smbls):
         else:
             lst.append(str(nasdaq.index[g]))
     print("...Got Quotes:")
-    print(h for v in lst)
-    #for v in lst:
-        #print(str(v),";",str(nasdaq.index[v]))
+    for v in lst:
+        print(str(v))
     return lst
 
 def f_nasdaq():
