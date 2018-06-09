@@ -52,6 +52,10 @@ class accum_stock(object):
             if i.date == datetime.date(datetime(y,m,d)):
                 return i
 
+    def update(self,p,t):
+        self.rt_price = p
+        self.rt_time = t
+    
     def __str__(self):
         return self.ticker
     __repr__ = __str__
