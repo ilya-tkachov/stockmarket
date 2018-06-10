@@ -1,34 +1,25 @@
+#http://pandas.pydata.org/pandas-docs/version/0.12/io.html
 import pandas
 import os
 import random
 import pandas_datareader
 from class_stockdata import *
-#from pandas_datareader import data, wb
 from datetime import datetime
 from pathlib import Path
-
-#nasdaqfile = pandas_datareader.nasdaq_trader.get_nasdaq_symbols().to_csv(str(os.getcwd()+"\\_index\\nasdaq\\symbols.txt"))
-#nasdaq = pandas.read_csv(str(os.getcwd()+"\\_index\\nasdaq\\symbols.txt"),usecols=["Symbol"])
-#pandas_datareader.nasdaq_trader.get_nasdaq_symbols().to_csv(path_or_buf="E:\Comp Sci\final project\_index\nasdaq\symbols.txt")
-#a = pandas_datareader.robinhood.RobinhoodQuoteReader({shr}).read().to_csv(str(os.getcwd()+"\\_index\\nasdaq\\_shares\\"+str(shr)+".csv"),header=False,index=False)#str(os.getcwd()+"\\_index\\nasdaq\\_shares\\"+str(shr)+".csv"),cols="last_trade_price")#header=False,index=False)
-#b = pandas.read_csv(str(os.getcwd()+"\\_index\\nasdaq\\_shares\\"+str(shr)+".csv"),index_col=0) #usecols=['last_trade_price','updated_at']
-#pandas.to_string -------<<<<<<<< USE INSTEAD AT http://pandas.pydata.org/pandas-docs/version/0.12/io.html
-
-#print(b.index[7])
-#print(b.index[12])
-#print(nasdaq.index[7])
 
 time = print() #realtime time
 smbls = 8576
 exclude = ["atest","ntest", "test", "z", "cbx",".","$","HJLI"]
 
-north_america = []
-asia = []
-europe = []
-quotes = {"S&P500":[],"FTSE100":[],"NASDAQ_RANDOM_500":generate_numbers(smbls),"NASDAQ_RANDOM_100":generate_numbers(smbls)}
+market = None #north_america, asia, europe
+
+north_america = {"DOWJONES":[],"S&P500":[],"NASDAQ_COMPOSITE":[],"NYSE":[]}
+asia = {"NIKKEI":[],"TOPIX":[],"HANG_SENG":[],"CSI300":[]}
+europe = {"S&P_EUROPE":[],"EURO_STOXX":[]}
+#######Automatically retrieve indexes and the stocks inside them
 #######CURRENCY CONVERTER
 
-#http://pandas.pydata.org/pandas-docs/version/0.12/io.html
+
 def generate_numbers(smbls):
     lst = []
     s = 10
@@ -45,11 +36,14 @@ def generate_numbers(smbls):
         print(str(v))
     return lst
 
+#quotes = {"S&P500":[],"FTSE100":[],"NASDAQ_RANDOM_500":generate_numbers(smbls),"NASDAQ_RANDOM_100":generate_numbers(smbls)}
+
+
 def f_nasdaq():
     global nasdaq
     print("...Process Started...")
     print("...Checking NASDAQ File...")
-    if Path(os.getcwd()+"\\_index\\nasdaq\\symbols.txt").exists():
+    if Path(os.getcwd()+"\\_index\\north_america\\nasdaq\\symbols.txt").exists():
         print("...Found NASDAQ File, Skipping...")
     else:
         print("...Cannot Find File, Getting NASDAQ...")
@@ -70,7 +64,7 @@ def market():
         print("...Getting Quote from Robinhood...")
         rx = pandas_datareader.robinhood.RobinhoodQuoteReader(i).read()
         rt_price = rx.values[8][0]
-        rt_time = rx.values[13][0]
+        rt_time = datetime.strptime(str(rx.values[13][0]), "%Y-%m-%dT%H:%M:%SZ")
         temp_stock = accum_stock(i,rt_price,rt_time)
         print("......Fetching Historical Data...")
         dx = pandas_datareader.DataReader(i, 'robinhood')
@@ -94,25 +88,30 @@ def market():
     print("\n...Created Stock Market Successfully...")
     return m
 
-def update_realtime_prices(m):
-    print("\n...Updating Prices...")
-    for i in m.data:
-        rx = pandas_datareader.robinhood.RobinhoodQuoteReader(i.ticker).read()
-        rt_price = rx.values[8][0]
-        rt_time = rx.values[13][0]
-        #pandas_datareader.robinhood.RobinhoodQuoteReader(str(nasdaq.index[i.index_num])).read().to_csv(str(os.getcwd()+"\\_index\\nasdaq\\_shares\\"+str(nasdaq.index[i.index_num])+".csv"),header=False,index=False)
-        #sx = pandas.read_csv(str(os.getcwd()+"\\_index\\nasdaq\\_shares\\"+str(nasdaq.index[i.index_num])+".csv"),index_col=0)
-        i.update(rt_price,rt_time)
-    print("...Updated Prices Successfully...")
-    print("...Real Time:",m.data[0].time())
-
-
-
+def update_realtime_prices(m):#needs to account for US holidays
+        cur_time = datetime.utcnow()
+        if datetime.weekday(cur_time) < 5:
+            if datetime.time(cur_time) > datetime.time(1,30,0,0) and datetime.time(cur_time) < datetime.time(20,0,0,0):
+                print("\n...Updating Prices...")
+                for i in m.data:
+                    rx = pandas_datareader.robinhood.RobinhoodQuoteReader(i.ticker).read()
+                    rt_price = rx.values[8][0]
+                    rt_time = datetime.strptime(str(rx.values[13][0]), "%Y-%m-%dT%H:%M:%SZ")
+                    #pandas_datareader.robinhood.RobinhoodQuoteReader(str(nasdaq.index[i.index_num])).read().to_csv(str(os.getcwd()+"\\_index\\nasdaq\\_shares\\"+str(nasdaq.index[i.index_num])+".csv"),header=False,index=False)
+                    #sx = pandas.read_csv(str(os.getcwd()+"\\_index\\nasdaq\\_shares\\"+str(nasdaq.index[i.index_num])+".csv"),index_col=0)
+                    i.update(rt_price,rt_time)
+                print("...Updated Prices Successfully...")
+                print("...Real Time:",m.data[0].time())
+            else:
+                print("...Market is closed; Please try between 9:30am EST and 4:00PM...")
+        else:
+            print("...Market is closed on the weekend...")
 f_nasdaq()
 shares = generate_numbers(smbls)
 m = market()
 
 #update_realtime_prices()
 
+    
 
     

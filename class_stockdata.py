@@ -22,39 +22,41 @@ class stock_market(object):
             if i.ticker == name:
                 return i
 
-##    def display(self):
-##        for i in self.data:
-##            print("\nN:",i,"DB-C:",str(i.data.len()))
-##            for g in i.data: 
-##                print("\tDATE:",g.name,"OPEN:",g.val_open,"CLOSE:",g.val_close,"VOL",g.volume)
-
 #individual stock generation class
 #
 
 class accum_stock(object):
     def __init__(self,ticker,rt_price,rt_time):
         self.ticker = ticker
-        self.rt_price = rt_price
-        self.rt_time = rt_time
+        self.info = [[rt_price,rt_time]]
+        ##self.rt_price = rt_price
+        ##self.rt_time = rt_time
         self.data = []
         
     def add_data(self,data):
         self.data.append(data)
 
     def price(self):
-        return self.rt_price
+        return self.info[-1][0]
 
     def time(self):
-        return self.rt_time
+        return self.info[-1][1].strftime("%r")
     
     def pull_history(self,d,m,y):
         for i in self.data:
             if i.date == datetime.date(datetime(y,m,d)):
                 return i
 
+    def chg(self,chg): #for statistical purposes
+        if chg == "now":
+            return price()/self.info[-2][0]
+        elif chg == "1d":
+            return price() - data[-1].close_price
+        elif chg == "year":
+            return price()/data[0].close_price
+        
     def update(self,p,t):
-        self.rt_price = p
-        self.rt_time = t
+        self.info.append([rt_price,rt_time])
     
     def __str__(self):
         return self.ticker
