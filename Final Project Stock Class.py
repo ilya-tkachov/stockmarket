@@ -25,7 +25,7 @@ class stock(object): #Initial stock class that will create the visual display of
 
     def createvisualdata(self,weeklyoutcome): #Creates the line that represents the fluctuation of stock data over time
         width = 3
-        x = self.rectx #initial x value of the line
+        x = self.rectx + self.rectwidth//14 #initial x value of the line
         y = self.recty + (self.rectheight//2) #Initial y value of the line (starts at the left most center of the rectangle
         d = (-math.pi/4) #Initial angle of the stock 
         for i in weeklyoutcome: #For loop to iterate through the list containing stock info for that given company
@@ -33,7 +33,7 @@ class stock(object): #Initial stock class that will create the visual display of
                 d = -1 * d 
             elif d > 0 and i > 0:
                 d = -1 * d 
-            length = self.rectwidth// 52 #Length of each drawn line
+            length = self.rectwidth// 56#Length of each drawn line
             x2 = int(x+length*math.cos(d)) #Determines the end points of the line being drawn
             y2 = int(y+length*math.sin(d))
             if y2 < self.recty: #Prevents the line from drawing outside of the rectangle
@@ -44,9 +44,9 @@ class stock(object): #Initial stock class that will create the visual display of
             pygame.time.delay(0) #Delays events in ms everytime the line is drawn
             x = x2 #Starts the next line on the endpoints of the previous line
             y = y2
+        pygame.draw.line(self.screen,(193,205,205),((self.rectx + self.rectwidth//14),self.recty),((self.rectx + self.rectwidth//14),self.recty + self.rectheight),width) #Draws y axis line
+        pygame.draw.line(self.screen,(193,205,205),(self.rectx,(self.recty + (self.rectheight) - self.rectheight//8)),((self.rectx + self.rectwidth),(self.recty + self.rectheight - self.rectheight//8))) #draws x axis line
 
-            #if y2 >= self.recty: #Ensures the line never crosses above the rectangle
-                #y2 = 100
 
     def createaxis(self): #Creates the x and y axis for the rectangle
         spacer = self.rectx #The x location for the values in the x axis
@@ -76,7 +76,7 @@ class stock(object): #Initial stock class that will create the visual display of
             
 class Button(object): #Button class that will be used to create a button that can be displayed anywhere and used
 
-    def __init__(self,screen,buttonrect,fillcolor = (69,139,0), bordercolor = (0,0,0),text = ""): #Initializes the key parameters of the button class
+    def __init__(self,screen,buttonrect,fillcolor = (69,139,0), text = "", textcolour = (255,0,0),bordercolor = (0,0,0)): #Initializes the key parameters of the button class
         self.screen = screen
         self.buttonrectx = buttonrect[0]
         self.buttonrecty = buttonrect[1]
@@ -85,16 +85,17 @@ class Button(object): #Button class that will be used to create a button that ca
         self.fillcolor = fillcolor
         self.bordercolor = bordercolor
         self.text = text
+        self.textcolour = textcolour
 
-    def createbutton(self,x,y):
-        pygame.draw.rect(self.screen,self.fillcolor,(x,y,self.buttonrectwidth,self.buttonrectheight))
+    def createbutton(self):
+        pygame.draw.rect(self.screen,self.fillcolor,(self.buttonrectx,self.buttonrecty,self.buttonrectwidth,self.buttonrectheight))
         displaytext = pygame.font.SysFont("arial",self.buttonrectheight//2)
-        buttontextsurface = displaytext.render("Testing",True,(255,0,0))
-        textsurface_rect = buttontextsurface.get_rect(center= (x + self.buttonrectwidth//2, y + self.buttonrectheight//2))
+        buttontextsurface = displaytext.render(self.text,True,self.textcolour)
+        textsurface_rect = buttontextsurface.get_rect(center= (self.buttonrectx + self.buttonrectwidth//2, self.buttonrecty + self.buttonrectheight//2))
         self.screen.blit(buttontextsurface,textsurface_rect)
 
-    def buttonclick(self,x,y,position):
-        if (x + self.buttonrectwidth) >= position[0] >= x and (y + self.buttonrectheight) >= position[1] >= y:
+    def buttonclick(self,position):
+        if (self.buttonrectx + self.buttonrectwidth) >= position[0] >= self.buttonrectx and (self.buttonrecty + self.buttonrectheight) >= position[1] >= self.buttonrecty:
             print("clicked")
             return True
         else:
@@ -105,10 +106,12 @@ class Button(object): #Button class that will be used to create a button that ca
         
 class Bankaccount(object):
 
-    def __init__(self,screen,startingmoney,currentfunds):
+    def __init__(self,screen,startingmoney,currentfunds,locationx,locationy):
         self.screen = screen
         self.startingmoney = startingmoney
         self.currentfunds = currentfunds
+        self.locationx = locationx
+        self.locationy = locationy
 
     def initialfunds(self):
         self.currentfunds = self.currentfunds + self.startingmoney
@@ -129,11 +132,12 @@ class Bankaccount(object):
         #print(self.currentfunds)
         displaytext = pygame.font.SysFont("arial",24)
         screensurface = displaytext.render(("Current Funds" + "   " + str(self.currentfunds)),True,(255,0,0))
-        self.screen.blit(screensurface,(400,600))
+        self.screen.blit(screensurface,(self.locationx,self.locationy))
         #pygame.display.update()
 
     def changingfunds(self): #Prevents previous data from being shown on screen
-        pygame.draw.rect(self.screen,(248,248,255),(400,600,200,50))
+        pygame.draw.rect(self.screen,(193,205,205),(self.locationx,self.locationy,300,50))
+        #pygame.display.update()
         
 
     
