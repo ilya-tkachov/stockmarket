@@ -1,19 +1,10 @@
 import pygame
 from datetime import datetime
-#from datetime import datetime
 pygame.init()
-
-#game works 
-
-#stock market class
-#has the whole market
-#method to generate a single stock, which then adds it to the whole stock market list that can be accessed
-#
 
 class stock_market(object):
     def __init__(self,data):
         self.data = data
-    #give this class ability to add a whole new stock, its properties and add values to that stock
     def add_stock(self,stock):
         self.stocks.append(stock)
 
@@ -22,22 +13,18 @@ class stock_market(object):
             if i.ticker == name:
                 return i
 
-#individual stock generation class
-#
-
 class accum_stock(object):
-    def __init__(self,ticker,rt_price,rt_time):
+    def __init__(self,ticker,rt_price,rt_time,name=None):
         self.ticker = ticker
         self.info = [[rt_price,rt_time]]
-        ##self.rt_price = rt_price
-        ##self.rt_time = rt_time
+        self.name = name
         self.data = []
         
     def add_data(self,data):
         self.data.append(data)
 
     def price(self):
-        return self.info[-1][0]
+        return float(self.info[-1][0])
 
     def time(self):
         return self.info[-1][1].strftime("%r")
@@ -49,12 +36,15 @@ class accum_stock(object):
 
     def chg(self,chg): #for statistical purposes
         if chg == "now":
-            return price()/self.info[-2][0]
+            return self.price()/float(self.info[-2][0])
         elif chg == "1d":
-            return price() - data[-1].close_price
+            return self.price()-self.data[-1].close_price
         elif chg == "year":
-            return price()/data[0].close_price
-        
+            if self.price() > self.data[0].close_price:
+                return "+"+str(((self.price()-self.data[0].close_price)/self.data[0].close_price)*100)
+            elif self.price() < self.data[0].close_price:
+                return "-"+str(((self.data[0].close_price-self.price())/self.data[0].close_price)*100)
+            
     def update(self,p,t):
         self.info.append([rt_price,rt_time])
     
@@ -72,7 +62,3 @@ class stock_data(accum_stock): #ability to retrieve database prices
     def __str__(self):
         return self.date.strftime("%B %d, %Y")
     __repr__ = __str__
-
-        
-#https://www.investopedia.com/university/stocks/stocks6.asp
-#figure out live stock data
