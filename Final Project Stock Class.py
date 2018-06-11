@@ -96,10 +96,10 @@ class Button(object): #Button class that will be used to create a button that ca
 
     def buttonclick(self,position):
         if (self.buttonrectx + self.buttonrectwidth) >= position[0] >= self.buttonrectx and (self.buttonrecty + self.buttonrectheight) >= position[1] >= self.buttonrecty:
-            print("clicked")
+            #print("clicked")
             return True
         else:
-            print("Not clicked")
+            #print("Not clicked")
             return False
 
     
@@ -138,6 +138,52 @@ class Bankaccount(object):
     def changingfunds(self): #Prevents previous data from being shown on screen
         pygame.draw.rect(self.screen,(193,205,205),(self.locationx,self.locationy,300,50))
         #pygame.display.update()
+
+##class Alternatingscreens(object):
+##    def __init__(self,screen,account,stockwatch,dictionary,exchange,menu):
+##        self.screen = screen
+##        self.account = account
+##        self.stockwatch = stockwatch
+##        self.dictionary = dictionary
+##        self.exchange = exchange
+##        self.menu = menu
+##
+##    def clickedaccount(self,account2):
+##        if account2 == True:
+##            print("yes")
+##
+##            self.account = True
+##            self.stockwatch = False
+##            self.dictionary = False
+##            self.exchange = False
+##            self.menu = False
+##        return self.account,self.stockwatch,self.exchange,self.dictionary,self.menu
+##        
+##
+##    def clickedstockwatch(self,stockwatch2):
+##        if stockwatch2 == True:
+##            self.stockwatch = True
+##            self.account = False
+##            self.dictionary = False
+##            self.exchange = False
+##            self.menu = False
+##
+##    def clickeddictionary(self,dictionary2):
+##        if dictionary2 == True:
+##            self.dictionary = True
+##            self.account = False
+##            self.stockwatch = False
+##            self.exchange = False
+##            self.menu = False
+##
+##    def clickedexchange(self,exchange2):
+##        if exchange2 == True:
+##            self.exchange = True
+##            self.account = False
+##            self.stockwatch = False
+##            self.menu = False
+##            self.dictionary = False
+            
         
 
     
