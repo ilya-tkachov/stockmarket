@@ -52,6 +52,8 @@ while(game):
                 if mainscreenbutton == True:
                     inmenu = False
                     inaccount = False
+                    indictionary = False
+                    inexchange = False
                     instockwatch = True
     ##          
         pygame.display.update()
@@ -84,6 +86,15 @@ while(game):
 
                 
         ##-----------------------------------------------------------------##
+
+        ## Table display of stock info##
+
+        nvdatable = stockclass.Stocktable(intermediate,"NAME", "VALUE", "NETCHANGE", "%CHANGE", "1MONTH", "1YEAR", "TIME")
+        nvdatable.createtable(500,550,650,200,WHITE)
+        nvdatable.addinfo("NVDA",str(3.50),str(10.20),str(30.00),str(2),str(2.2),"2:32PM",500,550,650,200)
+
+
+        ##------------------------------------------------------------------##
         
         ##Events for the screen##
         for event in pygame.event.get():
@@ -123,12 +134,6 @@ while(game):
                     indictionary = False
                     inexchange= True
                     
-
-##                differentscreens = stockclass.Alternatingscreens(win,inaccount,instockwatch,indictionary,inexchange,inmenu)
-##                differentscreens.clickedaccount(clickaccount)
-##                differentscreens.clickedstockwatch(clickstockwatch)
-##                differentscreens.clickeddictionary(clickdictionary)
-##                differentscreens.clickedexchange(clickexchange)
 
 ##                    
                 if event.button == 4: #Events to scroll through the window
@@ -216,11 +221,7 @@ while(game):
                     instockwatch = False
                     indictionary = False
                     inexchange = True
-##                differentscreens = stockclass.Alternatingscreens(win,inaccount,instockwatch,indictionary,inexchange,inmenu)
-##                differentscreens.clickedaccount(clickaccount)
-##                differentscreens.clickedstockwatch(clickstockwatch)
-##                differentscreens.clickeddictionary(clickdictionary)
-##                differentscreens.clickedexchange(clickexchange)
+
                 
         pygame.display.update()
         ##---------------------------##
@@ -280,12 +281,6 @@ while(game):
                     instockwatch = False
                     indictionary = False
                     inexchange = True
-##                differentscreens = stockclass.Alternatingscreens(win,inaccount,instockwatch,indictionary,inexchange,inmenu)
-##                differentscreens.clickedaccount(clickaccount)
-##                differentscreens.clickedstockwatch(clickstockwatch)
-##                differentscreens.clickeddictionary(clickdictionary)
-##                differentscreens.clickedexchange(clickexchange)
-                    
         
         
         pygame.display.update()
@@ -341,12 +336,6 @@ while(game):
                     instockwatch = False
                     indictionary = False
                     inexchange = True
-    ##                differentscreens = stockclass.Alternatingscreens(win,inaccount,instockwatch,indictionary,inexchange,inmenu)
-    ##                differentscreens.clickedaccount(clickaccount)
-    ##                differentscreens.clickedstockwatch(clickstockwatch)
-    ##                differentscreens.clickeddictionary(clickdictionary)
-    ##                differentscreens.clickedexchange(clickexchange)
-                            
                 
                 
         pygame.display.update()
