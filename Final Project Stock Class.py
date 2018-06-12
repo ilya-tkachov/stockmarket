@@ -139,50 +139,79 @@ class Bankaccount(object):
         pygame.draw.rect(self.screen,(193,205,205),(self.locationx,self.locationy,300,50))
         #pygame.display.update()
 
-##class Alternatingscreens(object):
-##    def __init__(self,screen,account,stockwatch,dictionary,exchange,menu):
-##        self.screen = screen
-##        self.account = account
-##        self.stockwatch = stockwatch
-##        self.dictionary = dictionary
-##        self.exchange = exchange
-##        self.menu = menu
-##
-##    def clickedaccount(self,account2):
-##        if account2 == True:
-##            print("yes")
-##
-##            self.account = True
-##            self.stockwatch = False
-##            self.dictionary = False
-##            self.exchange = False
-##            self.menu = False
-##        return self.account,self.stockwatch,self.exchange,self.dictionary,self.menu
-##        
-##
-##    def clickedstockwatch(self,stockwatch2):
-##        if stockwatch2 == True:
-##            self.stockwatch = True
-##            self.account = False
-##            self.dictionary = False
-##            self.exchange = False
-##            self.menu = False
-##
-##    def clickeddictionary(self,dictionary2):
-##        if dictionary2 == True:
-##            self.dictionary = True
-##            self.account = False
-##            self.stockwatch = False
-##            self.exchange = False
-##            self.menu = False
-##
-##    def clickedexchange(self,exchange2):
-##        if exchange2 == True:
-##            self.exchange = True
-##            self.account = False
-##            self.stockwatch = False
-##            self.menu = False
-##            self.dictionary = False
+
+class Stocktable(object):
+
+    def __init__(self,screen, name,value,netchange,percentchange,month1,year1,time):
+        self.screen = screen
+        self.name = name
+        self.value = value
+        self.netchange = netchange
+        self.percentchange = percentchange
+        self.month1 = month1
+        self.year1 = year1
+        self.time = time
+        #Clean up class by initializing rect properties *NOTE*
+
+    def createtable(self,x,y,width,height,rectcolor):
+        pygame.draw.rect(self.screen,rectcolor,(x,y,width,height)) #Draws the rectangle with the rect properties first initialized
+        nametext = pygame.font.SysFont("arial", width // 40)
+        valuetext = pygame.font.SysFont("arial",width//40)
+        netchangetext = pygame.font.SysFont("arial",width//40)
+        percentchangetext = pygame.font.SysFont("arial",width//40)
+        month1text = pygame.font.SysFont("arial",width//40)
+        year1text = pygame.font.SysFont("arial",width//40)
+        timetext = pygame.font.SysFont("arial",width//40)
+        
+        namesurface = nametext.render(self.name,True,(255,0,0))
+        valuesurface =  valuetext.render(self.value,True,(255,0,0))
+        netchangesurface =  netchangetext.render(self.netchange,True,(255,0,0))
+        percentchangesurface = percentchangetext.render(self.percentchange,True,(255,0,0))
+        month1surface = month1text.render(self.month1,True,(255,0,0))
+        year1surface = year1text.render(self.year1,True,(255,0,0))
+        timesurface = timetext.render(self.time,True,(255,0,0))
+        
+        self.screen.blit(namesurface,(x + width//50 , y + height // 15))
+        self.screen.blit(valuesurface,(x + width // 6, y + height // 15))
+        self.screen.blit(netchangesurface,(x + width / 3.5, y + height//15))
+        self.screen.blit(percentchangesurface, (x + width /2.2, y + height//15))
+        self.screen.blit(month1surface, (x + width/ 1.63, y + height // 15))
+        self.screen.blit(year1surface, (x + width/ 1.35, y + height // 15))
+        self.screen.blit(timesurface, (x + width/ 1.15, y + height//15))
+
+        pygame.draw.line(self.screen,(255,0,0),(x,y + height // 5),(x + width,y+height//5),3)
+
+    def addinfo(self,name,value,netchange,percentchange,month1,year1,time,x,y,width,height):
+        nametext = pygame.font.SysFont("arial", width // 40)
+        valuetext = pygame.font.SysFont("arial",width//40)
+        netchangetext = pygame.font.SysFont("arial",width//40)
+        percentchangetext = pygame.font.SysFont("arial",width//40)
+        month1text = pygame.font.SysFont("arial",width//40)
+        year1text = pygame.font.SysFont("arial",width//40)
+        timetext = pygame.font.SysFont("arial",width//40)
+        
+        namesurface = nametext.render(name,True,(255,0,0))
+        valuesurface =  valuetext.render(value,True,(255,0,0))
+        netchangesurface =  netchangetext.render(netchange,True,(255,0,0))
+        percentchangesurface = percentchangetext.render(percentchange,True,(255,0,0))
+        month1surface = month1text.render(month1,True,(255,0,0))
+        year1surface = year1text.render(year1,True,(255,0,0))
+        timesurface = timetext.render(time,True,(255,0,0))
+        
+        self.screen.blit(namesurface,(x + width//50 , y + height // 4))
+        self.screen.blit(valuesurface,(x + width // 6, y + height // 4))
+        self.screen.blit(netchangesurface,(x + width / 3.5, y + height//4))
+        self.screen.blit(percentchangesurface, (x + width /2.2, y + height//4))
+        self.screen.blit(month1surface, (x + width/ 1.63, y + height // 4))
+        self.screen.blit(year1surface, (x + width/ 1.35, y + height // 4))
+        self.screen.blit(timesurface, (x + width/ 1.15, y + height//4))
+        
+
+        
+
+
+        
+        
             
         
 
