@@ -1,0 +1,418 @@
+import pygame
+import math
+import stockclass
+import random
+from class_stockdata import *
+from class_getindex import *
+import time
+import os  
+
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+
+pygame.init()
+clock = pygame.time.Clock()
+#INITIALIZED MODULES
+
+RED = (255,0,0)
+GREEN = (0,255,0)
+BLUE = (0,0,255)
+BLACK = (0,0,0)
+WHITE = (248,248,255)
+GREY = (193,205,205)
+#COLOURS
+
+
+win = pygame.display.set_mode((1200,800),pygame.NOFRAME)
+intermediate =  pygame.surface.Surface((1200,1500)) #screen for scrolling
+game = True
+instockwatch = False
+inaccount = False
+indictionary = False
+inexchange = False
+inmenu = True
+scroll_y = 0
+intermediate.fill(GREY)
+mainlogo = pygame.image.load("logo.jpg")
+#WINDOW AND WHILE LOOP VARIABLES
+
+
+
+
+## Creates the visual stock data##
+weeklyoutcome = [] #empty list that will be used for the stock data
+for i in range(80): #Creates a list of 80 integers with values that range from -100 to 100
+    i = random.randrange(-100,100)
+    weeklyoutcome.append(i) #appends each i character to the list
+
+
+
+
+#--world map--#
+maps = pygame.transform.scale(pygame.image.load(str(os.getcwd()+"\\_assets\\map.png")),(800,400))
+asia = pygame.transform.scale(pygame.image.load(str(os.getcwd()+"\\_assets\\asia_isolate.png")),(800,400))
+north_america = pygame.transform.scale(pygame.image.load(str(os.getcwd()+"\\_assets\\north_america_isolate.png")),(800,400))
+europe = pygame.transform.scale(pygame.image.load(str(os.getcwd()+"\\_assets\\europe_isolate.png")),(800,400))
+
+map_img = [maps,asia,europe,north_america]
+ver = "v1-ri-ini"
+#----------------------------------------------#
+class top_bar(object):
+    def __init__(self,win,position,color,version,time,market=False):
+        self.win = win
+        self.position = position
+        self.x = position[0]
+        self.y = position[1]
+        self.w = position[2]
+        self.h = position[3]
+        self.color = color
+        self.version = version
+        self.time = time
+        self.font = pygame.font.SysFont("arialrounded", self.h-2)
+
+    def update(self,time,market):
+        pygame.draw.rect(self.win,self.color,(self.x,self.y,self.w,self.h))
+        version_ui = self.font.render(self.version,0,(0,0,0))
+        time_ui = self.font.render(time,0,(0,0,0))
+        if market == True:
+            market_ui = self.font.render("OPEN",0,(0,215,65))
+        else:
+            market_ui = self.font.render("CLOSED",0,(220,0,0))
+        self.win.blit(version_ui,(0,0))
+        self.win.blit(time_ui,(75,0))
+        self.win.blit(market_ui,(175,0))
+
+
+
+
+
+
+##------------------------------##
+
+
+##------------------------------##
+event = pygame.event.get()
+menu_bar = top_bar(win,[0,0,1200,15],(186,186,186),ver,"HH:MM:APM")
+for x in event:
+    if event is pygame.QUIT:
+        pygame.quit()
+        raise SystemExit
+    else:
+        menu_bar.update(str(time.strftime("%I:%M%p [%S]")),check_market_time())
+        pygame.display.update()
+
+    raise SystemExit
+while(game):
+
+ 
+
+    while inmenu:
+        win.fill(WHITE)
+        buttontest =  stockclass.Button(win,(450,350,300,100),BLACK,"Start")
+        win.blit(mainlogo,(390,150))
+
+        buttontest.createbutton()
+
+
+
+
+        pygame.draw.rect(win,(22,22,22),(200,200,800,400))
+        for i in map_img:
+            win.blit(i,(200,200))
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                setposition = pygame.mouse.get_pos()
+                print(setposition)
+                buttontest.buttonclick(setposition)
+                mainscreenbutton = (buttontest.buttonclick(setposition))
+                if mainscreenbutton == True:
+                    inmenu = False
+                    inaccount = False
+                    indictionary = False
+                    inexchange = False
+                    instockwatch = True
+    ##          
+        pygame.display.update()
+
+        
+    
+    while instockwatch:
+        win.fill(GREY)
+        ##Creates the stock data for the screen##
+        test = stockclass.stock(intermediate,(500,100,650,300),"NVDA",RED,0,0)
+        test.createdatadisplay(BLACK)
+        test.createvisualdata(weeklyoutcome)
+        test.createaxis()
+        ##------------------------------------------------------------------------##
+
+
+        ##Creates the Buttons for the screen##
+        Account =  stockclass.Button(intermediate,(20,0,270,70),BLACK,"Account",WHITE)
+        Account.createbutton()
+        Stockwatch = stockclass.Button(intermediate,(310,0,270,70),BLACK,"Stockwatch",WHITE)
+        Stockwatch.createbutton()
+        Dictionary = stockclass.Button(intermediate,(600,0,270,70),BLACK,"Dictionary",WHITE)
+        Dictionary.createbutton()
+        Exchange = stockclass.Button(intermediate,(890,0,270,70),BLACK,"Exchange",WHITE)
+        Exchange.createbutton()
+        ##--------------------------------------------------------------------------------------##
+        for i in range (6):
+            testbutton = stockclass.Button(intermediate,(20,300 + i *100,270,70),BLACK,"test",WHITE)
+            testbutton.createbutton()
+
+                
+        ##-----------------------------------------------------------------##
+
+        ## Table display of stock info##
+
+        nvdatable = stockclass.Stocktable(intermediate,"NAME", "VALUE", "NETCHANGE", "%CHANGE", "1MONTH", "1YEAR", "TIME")
+        nvdatable.createtable(500,550,650,200,WHITE)
+        nvdatable.addinfo("NVDA",str(3.50),str(10.20),str(30.00),str(2),str(2.2),"2:32PM",500,550,650,200)
+
+
+        ##------------------------------------------------------------------##
+        
+        ##Events for the screen##
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                setposition = pygame.mouse.get_pos()
+                print(setposition)
+                Account.buttonclick(setposition)
+                Stockwatch.buttonclick(setposition)
+                Dictionary.buttonclick(setposition)
+                Exchange.buttonclick(setposition)
+                clickaccount = (Account.buttonclick(setposition))
+                clickstockwatch = (Stockwatch.buttonclick(setposition))
+                clickdictionary = (Dictionary.buttonclick(setposition))
+                clickexchange = (Exchange.buttonclick(setposition))
+                if clickaccount == True:
+                    instockwatch = False
+                    inmenu = False
+                    indictionary = False
+                    inexchange = False
+                    inaccount = True
+                elif clickstockwatch == True:
+                    inmenu = False
+                    inaccount = False
+                    indictionary = False
+                    inexchange = False
+                    instockwatch = True
+                elif clickdictionary == True:
+                    inmenu = False
+                    inaccount = False
+                    inexchange = False
+                    instockwatch = False
+                    indictionary = True
+                elif clickexchange == True:
+                    instockwatch = False
+                    inmenu = False
+                    inaccount = False
+                    indictionary = False
+                    inexchange= True
+                    
+
+##                    
+                if event.button == 4: #Events to scroll through the window
+                    scroll_y = min(scroll_y + 15,0)
+                if event.button == 5:
+                    scroll_y = max(scroll_y - 15, -500)
+        win.blit(intermediate,(0,scroll_y)) #Prevents the screen from flickering
+        pygame.display.flip()
+        clock.tick(60)
+        pygame.display.update()
+        ##--------------------------------------------------------------------##
+
+
+
+
+
+    while inaccount:
+        ##Fills the screen##
+        win.fill(GREY)
+        intermediate.fill(GREY)
+        ##--------------------##
+
+        #Creates the main buttons located on top of the screen#
+        Account =  stockclass.Button(win,(20,0,270,70),BLACK,"Account",WHITE)
+        Account.createbutton()
+        Stockwatch = stockclass.Button(win,(310,0,270,70),BLACK,"Stockwatch",WHITE)
+        Stockwatch.createbutton()
+        Dictionary = stockclass.Button(win,(600,0,270,70),BLACK,"Dictionary",WHITE)
+        Dictionary.createbutton()
+        Exchange = stockclass.Button(win,(890,0,270,70),BLACK,"Exchange",WHITE)
+        Exchange.createbutton()
+        ##-----------------------------------------------------##
+
+        
+        ##Manages the user bank information##
+        userbank =  stockclass.Bankaccount(win,1000,0,400,500)
+        userbank.initialfunds()
+        userbank.addfunds(2.30,200)
+        userbank.displaycurrentfunds()
+        
+        userbank.addfunds(200,2)
+        userbank.changingfunds() #Prevents previous funds from being displayed
+        userbank.displaycurrentfunds()
+        
+        userbank.addfunds(10,5)
+        userbank.changingfunds()
+        userbank.displaycurrentfunds() #3 tested entries of adding stocks
+        
+        #pygame.display.update()
+        ##--------------------------------------------------------------------##
+
+        ##Manage events for the game##
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                setposition = pygame.mouse.get_pos()
+                Account.buttonclick(setposition)
+                Stockwatch.buttonclick(setposition)
+                Dictionary.buttonclick(setposition)
+                Exchange.buttonclick(setposition)
+                clickaccount = (Account.buttonclick(setposition))
+                clickstockwatch = (Stockwatch.buttonclick(setposition))
+                clickdictionary = (Dictionary.buttonclick(setposition))
+                clickexchange = (Exchange.buttonclick(setposition))
+                if clickaccount == True:
+                    instockwatch = False
+                    inmenu = False
+                    indictionary = False
+                    inexchange = False
+                    inaccount = True
+                elif clickstockwatch == True:
+                    inmenu = False
+                    inaccount = False
+                    indictionary = False
+                    inexchange = False
+                    instockwatch = True
+                elif clickdictionary == True:
+                    inmenu = False
+                    inaccount = False
+                    inexchange = False
+                    instockwatch = False
+                    indictionary = True
+                elif clickexchange == True:
+                    inaccount = False
+                    inmenu = False
+                    instockwatch = False
+                    indictionary = False
+                    inexchange = True
+
+                
+        pygame.display.update()
+        ##---------------------------##
+
+
+
+
+        
+
+    while indictionary:
+        win.fill(GREY)
+        intermediate.fill(GREY)
+        
+                #Creates the main buttons located on top of the screen#
+        Account =  stockclass.Button(win,(20,0,270,70),BLACK,"Account",WHITE)
+        Account.createbutton()
+        Stockwatch = stockclass.Button(win,(310,0,270,70),BLACK,"Stockwatch",WHITE)
+        Stockwatch.createbutton()
+        Dictionary = stockclass.Button(win,(600,0,270,70),BLACK,"Dictionary",WHITE)
+        Dictionary.createbutton()
+        Exchange = stockclass.Button(win,(890,0,270,70),BLACK,"Exchange",WHITE)
+        Exchange.createbutton()
+        ##-----------------------------------------------------##
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                setposition = pygame.mouse.get_pos()
+                print(setposition)
+                Account.buttonclick(setposition)
+                Stockwatch.buttonclick(setposition)
+                Dictionary.buttonclick(setposition)
+                Exchange.buttonclick(setposition)
+                clickaccount = (Account.buttonclick(setposition))
+                clickstockwatch = (Stockwatch.buttonclick(setposition))
+                clickdictionary = (Dictionary.buttonclick(setposition))
+                clickexchange = (Exchange.buttonclick(setposition))
+                if clickaccount == True:
+                    instockwatch = False
+                    inmenu = False
+                    indictionary = False
+                    inexchange = False
+                    inaccount = True
+                elif clickstockwatch == True:
+                    inmenu = False
+                    inaccount = False
+                    indictionary = False
+                    inexchange = False
+                    instockwatch = True
+                elif clickdictionary == True:
+                    inmenu = False
+                    inaccount = False
+                    inexchange = False
+                    instockwatch = False
+                    indictionary = True
+                elif clickexchange == True:
+                    inaccount = False
+                    inmenu = False
+                    instockwatch = False
+                    indictionary = False
+                    inexchange = True
+        
+        
+        pygame.display.update()
+
+    while inexchange:
+        win.fill(GREY)
+        intermediate.fill(GREY)
+        
+                    #Creates the main buttons located on top of the screen#
+        Account =  stockclass.Button(win,(20,0,270,70),BLACK,"Account",WHITE)
+        Account.createbutton()
+        Stockwatch = stockclass.Button(win,(310,0,270,70),BLACK,"Stockwatch",WHITE)
+        Stockwatch.createbutton()
+        Dictionary = stockclass.Button(win,(600,0,270,70),BLACK,"Dictionary",WHITE)
+        Dictionary.createbutton()
+        Exchange = stockclass.Button(win,(890,0,270,70),BLACK,"Exchange",WHITE)
+        Exchange.createbutton()
+        ##-----------------------------------------------------##
+            
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                setposition = pygame.mouse.get_pos()
+                print(setposition)
+                Account.buttonclick(setposition)
+                Stockwatch.buttonclick(setposition)
+                Dictionary.buttonclick(setposition)
+                Exchange.buttonclick(setposition)
+                clickaccount = (Account.buttonclick(setposition))
+                clickstockwatch = (Stockwatch.buttonclick(setposition))
+                clickdictionary = (Dictionary.buttonclick(setposition))
+                clickexchange = (Exchange.buttonclick(setposition))
+                if clickaccount == True:
+                    instockwatch = False
+                    inmenu = False
+                    indictionary = False
+                    inexchange = False
+                    inaccount = True
+                elif clickstockwatch == True:
+                    inmenu = False
+                    inaccount = False
+                    indictionary = False
+                    inexchange = False
+                    instockwatch = True
+                elif clickdictionary == True:
+                    inmenu = False
+                    inaccount = False
+                    inexchange = False
+                    instockwatch = False
+                    indictionary = True
+                elif clickexchange == True:
+                    inaccount = False
+                    inmenu = False
+                    instockwatch = False
+                    indictionary = False
+                    inexchange = True
+                
+                
+        pygame.display.update()
