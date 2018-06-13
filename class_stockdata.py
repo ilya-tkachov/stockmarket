@@ -21,13 +21,13 @@ class accum_stock(object):
         self.data = []
         
     def add_data(self,data):
-        self.data.append(data)
+        self.data = data
 
     def price(self):
         return float(self.info[-1][0])
 
     def time(self):
-        return self.info[-1][1].strftime("%r")
+        return self.info[-1][1].strftime("%I:%M %p")
     
     def pull_history(self,d,m,y):
         for i in self.data:
@@ -46,7 +46,7 @@ class accum_stock(object):
                 return "-"+str(((self.data[0].close_price-self.price())/self.data[0].close_price)*100)
             
     def update(self,p,t):
-        self.info.append([rt_price,rt_time])
+        self.info.append([p,t])
     
     def __str__(self):
         return self.ticker

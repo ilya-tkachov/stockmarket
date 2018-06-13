@@ -2,7 +2,19 @@ import pygame
 from class_stockdata import *
 from class_getindex import *
 import time
+
+
+import os  
+
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+
+
 pygame.init
+
+
+
+#remove window border
+#pygame crashing when looping the update?
 
 maps = pygame.transform.scale(pygame.image.load(str(os.getcwd()+"\\_assets\\map.png")),(800,400))
 asia = pygame.transform.scale(pygame.image.load(str(os.getcwd()+"\\_assets\\asia_isolate.png")),(800,400))
@@ -25,13 +37,6 @@ class top_bar(object):
         self.time = time
         self.font = pygame.font.SysFont("arialrounded", self.h-2)
 
-    def create(self):
-        pygame.draw.rect(self.win,self.color,(self.x,self.y,self.w,self.h))
-        version_ui = self.font.render(self.version,0,(0,0,0))
-        market_ui = self.font.render("MARKET",0,(0,0,0))
-        self.win.blit(version_ui,(0,0))
-        self.win.blit(market_ui,(200,0))
-
     def update(self,time,market):
         pygame.draw.rect(self.win,self.color,(self.x,self.y,self.w,self.h))
         version_ui = self.font.render(self.version,0,(0,0,0))
@@ -44,7 +49,7 @@ class top_bar(object):
         self.win.blit(time_ui,(75,0))
         self.win.blit(market_ui,(175,0))
 
-win = pygame.display.set_mode((1200,800))
+win = pygame.display.set_mode((1200,800), pygame.NOFRAME)
 win.fill((35,35,35))
 
 pygame.draw.rect(win,(22,22,22),(200,200,800,400))
@@ -52,8 +57,16 @@ for i in map_img:
     win.blit(i,(200,200))
 menu_bar = top_bar(win,[0,0,1200,15],(186,186,186),ver,"HH:MM:APM")
 while True:
-    menu_bar.update(str(time.strftime("%I:%M%p [%S]")),check_market_time())
-    pygame.display.update()
-    pygame.time.delay(1000)
-
+    event = pygame.event.get()
+    for x in event:
+        if event is pygame.QUIT:
+            pygame.quit()
+            raise SystemExit
+        else:
+            pygame.time.delay(1000)
+            update_realtime_prices(m) #update in 10 minute intervals or look up robinhood quote interval
+            menu_bar.update(str(time.strftime("%I:%M%p [%S]")),check_market_time())
+            pygame.display.update()
+    
+raise SystemExit
 
