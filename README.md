@@ -8,6 +8,8 @@ Available functions:
 fetch():
 Takes the name of the ticker, fetches it from its stock_market().data and outputs as a class that can be accessed. (Output all tickers inside the market by calling stock_market().data)
 
+----------------------------------------------------------------------------------------------------------
+
 class accum_stock():
 Available functions:
 
@@ -26,9 +28,13 @@ enter a day, month and year to retrieve stock prices of that current date, acces
 chg():
 --to be completed
 
+----------------------------------------------------------------------------------------------------------
+
 class stock_data(accum_stock):
 A data structure for historical data. Once accessed through pull history, variable [date,open_price,close_price,volume] can be called for that time period.
 Available functions: none
+
+----------------------------------------------------------------------------------------------------------
 
 To use class_getindex.py:
 
