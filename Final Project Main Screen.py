@@ -95,55 +95,58 @@ menu_bar = top_bar(win,[0,0,1200,15],(186,186,186),ver,"HH:MM:APM")
 for x in event:
     if event is pygame.QUIT:
         pygame.quit()
-        raise SystemExit
+        #raise SystemExit
     else:
         menu_bar.update(str(time.strftime("%I:%M%p [%S]")),check_market_time())
         pygame.display.update()
 
-    raise SystemExit
-while(game):
+    #raise SystemExit
+        
+while(game): #Main while loop to keep the game running 
 
  
 
-    while inmenu:
-        win.fill(WHITE)
-        buttontest =  stockclass.Button(win,(450,350,300,100),BLACK,"Start")
-        win.blit(mainlogo,(390,150))
+    while inmenu: #Menu screen for the game 
+        win.fill(WHITE) #Fills the window with a chosen color
+        buttontest =  stockclass.Button(win,(450,350,300,100),BLACK,"Start") #Calls the class to create the button and its characteristics
+        win.blit(mainlogo,(390,150)) #Blits the logo jpeg onto the screen on the given coordinates
 
-        buttontest.createbutton()
-
-
+        buttontest.createbutton() #Displays the button and essentially creates its existence for the screen
 
 
-        pygame.draw.rect(win,(22,22,22),(200,200,800,400))
-        for i in map_img:
-            win.blit(i,(200,200))
+
+
+        pygame.draw.rect(win,(22,22,22),(200,600,800,400)) #Black rectangle used for the map
+        for i in map_img: #Map coordinates
+            win.blit(i,(200,600))
 
 
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-                setposition = pygame.mouse.get_pos()
+                setposition = pygame.mouse.get_pos() #Gets the mouse position coordinates
                 print(setposition)
-                buttontest.buttonclick(setposition)
-                mainscreenbutton = (buttontest.buttonclick(setposition))
-                if mainscreenbutton == True:
+                buttontest.buttonclick(setposition) #Checks if the "buttontest" button has been clicked
+                mainscreenbutton = (buttontest.buttonclick(setposition)) #Sets a variable equal to the button click will return True if Clicked False for anything else
+                if mainscreenbutton == True: #If the button is clicked set all while loops to false except for the stockwatch loop
                     inmenu = False
                     inaccount = False
                     indictionary = False
                     inexchange = False
                     instockwatch = True
     ##          
-        pygame.display.update()
+        pygame.display.update() #Updates display
 
         
     
-    while instockwatch:
-        win.fill(GREY)
+    while instockwatch: #Main while loop for the stockwatch section of the game
+        win.fill(GREY) #Fills the screen with a certain color
+
+        
         ##Creates the stock data for the screen##
-        test = stockclass.stock(intermediate,(500,100,650,300),"NVDA",RED,0,0)
-        test.createdatadisplay(BLACK)
-        test.createvisualdata(weeklyoutcome)
-        test.createaxis()
+        test = stockclass.stock(intermediate,(500,100,650,300),"NVDA",RED,0,0) 
+        test.createdatadisplay(BLACK) #Creates the rectangle background
+        test.createvisualdata(weeklyoutcome) #Displays the line *weekly outcome is the list of values (refer to top of the code)*
+        test.createaxis() #Creates the x and y axis
         ##------------------------------------------------------------------------##
 
 
@@ -157,7 +160,7 @@ while(game):
         Exchange = stockclass.Button(intermediate,(890,0,270,70),BLACK,"Exchange",WHITE)
         Exchange.createbutton()
         ##--------------------------------------------------------------------------------------##
-        for i in range (6):
+        for i in range (6): #Creates 6 test buttons using a for loop (Not really needed)
             testbutton = stockclass.Button(intermediate,(20,300 + i *100,270,70),BLACK,"test",WHITE)
             testbutton.createbutton()
 
@@ -167,8 +170,8 @@ while(game):
         ## Table display of stock info##
 
         nvdatable = stockclass.Stocktable(intermediate,"NAME", "VALUE", "NETCHANGE", "%CHANGE", "1MONTH", "1YEAR", "TIME")
-        nvdatable.createtable(500,550,650,200,WHITE)
-        nvdatable.addinfo("NVDA",str(3.50),str(10.20),str(30.00),str(2),str(2.2),"2:32PM",500,550,650,200)
+        nvdatable.createtable(500,550,650,200,WHITE) #Creates the rectangle for the table
+        nvdatable.addinfo("NVDA",str(3.50),str(10.20),str(30.00),str(2),str(2.2),"2:32PM",500,550,650,200) #Adds info into the table (Repeat x,y,width,height when calling for each method)
 
 
         ##------------------------------------------------------------------##
@@ -178,33 +181,33 @@ while(game):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 setposition = pygame.mouse.get_pos()
                 print(setposition)
-                Account.buttonclick(setposition)
+                Account.buttonclick(setposition) #Sets up a button click check for each section of the application (Account, Stockwatch, Dictionary and exchange)
                 Stockwatch.buttonclick(setposition)
                 Dictionary.buttonclick(setposition)
                 Exchange.buttonclick(setposition)
-                clickaccount = (Account.buttonclick(setposition))
+                clickaccount = (Account.buttonclick(setposition)) #Sets variables equal to the returned value (makes it easier to do checks)
                 clickstockwatch = (Stockwatch.buttonclick(setposition))
                 clickdictionary = (Dictionary.buttonclick(setposition))
                 clickexchange = (Exchange.buttonclick(setposition))
-                if clickaccount == True:
+                if clickaccount == True: #If the account button was clicked access the account while loop only
                     instockwatch = False
                     inmenu = False
                     indictionary = False
                     inexchange = False
                     inaccount = True
-                elif clickstockwatch == True:
+                elif clickstockwatch == True: #If the stockwatch button was clicked access the stockwatch while loop only
                     inmenu = False
                     inaccount = False
                     indictionary = False
                     inexchange = False
                     instockwatch = True
-                elif clickdictionary == True:
+                elif clickdictionary == True: #If the dictionary button was clicked access the dictionary while loop only
                     inmenu = False
                     inaccount = False
                     inexchange = False
                     instockwatch = False
                     indictionary = True
-                elif clickexchange == True:
+                elif clickexchange == True: #If the exchange button was clicked access the exchange while loop only
                     instockwatch = False
                     inmenu = False
                     inaccount = False
@@ -227,10 +230,12 @@ while(game):
 
 
 
-    while inaccount:
+    while inaccount: #Main while loop for the account section of the game
+
+        
         ##Fills the screen##
         win.fill(GREY)
-        intermediate.fill(GREY)
+        intermediate.fill(GREY) #Intermediate screen replaces the main window and is used for scrolling
         ##--------------------##
 
         #Creates the main buttons located on top of the screen#
@@ -248,11 +253,11 @@ while(game):
         ##Manages the user bank information##
         userbank =  stockclass.Bankaccount(win,1000,0,400,500)
         userbank.initialfunds()
-        userbank.addfunds(2.30,200)
+        userbank.addfunds(2.30,200) #adds funds (Sharevalue, amount of shares)
         userbank.displaycurrentfunds()
         
         userbank.addfunds(200,2)
-        userbank.changingfunds() #Prevents previous funds from being displayed
+        userbank.changingfunds() #Prevents previous funds from being displayed (Blits a rectangle with same screen color over previous data at the same spot)
         userbank.displaycurrentfunds()
         
         userbank.addfunds(10,5)
@@ -266,33 +271,33 @@ while(game):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 setposition = pygame.mouse.get_pos()
-                Account.buttonclick(setposition)
+                Account.buttonclick(setposition) #Sets up buttonclick functionality for the 4 main buttons (account,stockwatch,dictionary,exchange)
                 Stockwatch.buttonclick(setposition)
                 Dictionary.buttonclick(setposition)
                 Exchange.buttonclick(setposition)
-                clickaccount = (Account.buttonclick(setposition))
+                clickaccount = (Account.buttonclick(setposition)) #Sets variables equal to their return value True or False
                 clickstockwatch = (Stockwatch.buttonclick(setposition))
                 clickdictionary = (Dictionary.buttonclick(setposition))
                 clickexchange = (Exchange.buttonclick(setposition))
-                if clickaccount == True:
+                if clickaccount == True: #If the account button was clicked access the account while loop only
                     instockwatch = False
                     inmenu = False
                     indictionary = False
                     inexchange = False
                     inaccount = True
-                elif clickstockwatch == True:
+                elif clickstockwatch == True:#If the stockwatch button was clicked access the stockwatch while loop only
                     inmenu = False
                     inaccount = False
                     indictionary = False
                     inexchange = False
                     instockwatch = True
-                elif clickdictionary == True:
+                elif clickdictionary == True: #If the dictionary button was clicked access the dictionary while loop only
                     inmenu = False
                     inaccount = False
                     inexchange = False
                     instockwatch = False
                     indictionary = True
-                elif clickexchange == True:
+                elif clickexchange == True:#If the exchange button was clicked access the exchange while loop only
                     inaccount = False
                     inmenu = False
                     instockwatch = False
@@ -322,37 +327,38 @@ while(game):
         Exchange = stockclass.Button(win,(890,0,270,70),BLACK,"Exchange",WHITE)
         Exchange.createbutton()
         ##-----------------------------------------------------##
+        
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 setposition = pygame.mouse.get_pos()
                 print(setposition)
-                Account.buttonclick(setposition)
+                Account.buttonclick(setposition)#Sets up buttonclick functionality for the 4 main buttons (account,stockwatch,dictionary,exchange)
                 Stockwatch.buttonclick(setposition)
                 Dictionary.buttonclick(setposition)
                 Exchange.buttonclick(setposition)
-                clickaccount = (Account.buttonclick(setposition))
+                clickaccount = (Account.buttonclick(setposition))#Sets variables equal to their return value True or False
                 clickstockwatch = (Stockwatch.buttonclick(setposition))
                 clickdictionary = (Dictionary.buttonclick(setposition))
                 clickexchange = (Exchange.buttonclick(setposition))
-                if clickaccount == True:
+                if clickaccount == True:#If the account button was clicked access the account while loop only
                     instockwatch = False
                     inmenu = False
                     indictionary = False
                     inexchange = False
                     inaccount = True
-                elif clickstockwatch == True:
+                elif clickstockwatch == True:#If the stockwatch button was clicked access the stockwatch while loop only
                     inmenu = False
                     inaccount = False
                     indictionary = False
                     inexchange = False
                     instockwatch = True
-                elif clickdictionary == True:
+                elif clickdictionary == True: #If the dictionary button was clicked access the dictionary while loop only
                     inmenu = False
                     inaccount = False
                     inexchange = False
                     instockwatch = False
                     indictionary = True
-                elif clickexchange == True:
+                elif clickexchange == True:#If the exchange button was clicked access the exchange while loop only
                     inaccount = False
                     inmenu = False
                     instockwatch = False
@@ -360,7 +366,7 @@ while(game):
                     inexchange = True
         
         
-        pygame.display.update()
+        pygame.display.update() #Update display
 
     while inexchange:
         win.fill(GREY)
@@ -381,33 +387,33 @@ while(game):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 setposition = pygame.mouse.get_pos()
                 print(setposition)
-                Account.buttonclick(setposition)
+                Account.buttonclick(setposition)#Sets up buttonclick functionality for the 4 main buttons (account,stockwatch,dictionary,exchange)
                 Stockwatch.buttonclick(setposition)
                 Dictionary.buttonclick(setposition)
                 Exchange.buttonclick(setposition)
-                clickaccount = (Account.buttonclick(setposition))
+                clickaccount = (Account.buttonclick(setposition))#Sets variables equal to their return value True or False
                 clickstockwatch = (Stockwatch.buttonclick(setposition))
                 clickdictionary = (Dictionary.buttonclick(setposition))
                 clickexchange = (Exchange.buttonclick(setposition))
-                if clickaccount == True:
+                if clickaccount == True:#If the account button was clicked access the account while loop only
                     instockwatch = False
                     inmenu = False
                     indictionary = False
                     inexchange = False
                     inaccount = True
-                elif clickstockwatch == True:
+                elif clickstockwatch == True:#If the stockwatch button was clicked access the stockwatch while loop only
                     inmenu = False
                     inaccount = False
                     indictionary = False
                     inexchange = False
                     instockwatch = True
-                elif clickdictionary == True:
+                elif clickdictionary == True: #If the dictionary button was clicked access the dictionary while loop only
                     inmenu = False
                     inaccount = False
                     inexchange = False
                     instockwatch = False
                     indictionary = True
-                elif clickexchange == True:
+                elif clickexchange == True:#If the exchange button was clicked access the exchange while loop only
                     inaccount = False
                     inmenu = False
                     instockwatch = False
