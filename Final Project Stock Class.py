@@ -153,7 +153,7 @@ class Stocktable(object):
         self.time = time
         #Clean up class by initializing rect properties *NOTE*
 
-    def createtable(self,x,y,width,height,rectcolor):
+    def createtable(self,x,y,width,height,rectcolor): #Display the main sections of the table in a specific arrangement
         pygame.draw.rect(self.screen,rectcolor,(x,y,width,height)) #Draws the rectangle with the rect properties first initialized
         nametext = pygame.font.SysFont("arial", width // 40)
         valuetext = pygame.font.SysFont("arial",width//40)
@@ -181,7 +181,7 @@ class Stocktable(object):
 
         pygame.draw.line(self.screen,(255,0,0),(x,y + height // 5),(x + width,y+height//5),3)
 
-    def addinfo(self,name,value,netchange,percentchange,month1,year1,time,x,y,width,height):
+    def addinfo(self,name,value,netchange,percentchange,month1,year1,time,x,y,width,height): #Displays the added info onto the table
         nametext = pygame.font.SysFont("arial", width // 40)
         valuetext = pygame.font.SysFont("arial",width//40)
         netchangetext = pygame.font.SysFont("arial",width//40)
