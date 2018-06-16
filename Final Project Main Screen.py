@@ -69,7 +69,7 @@ class top_bar(object):
         self.time = time
         self.font = pygame.font.SysFont("arialrounded", self.h-2)
 
-    def update(self,time,market):
+    def bar_update(self,time,market):
         pygame.draw.rect(self.win,self.color,(self.x,self.y,self.w,self.h))
         version_ui = self.font.render(self.version,0,(0,0,0))
         time_ui = self.font.render(time,0,(0,0,0))
@@ -80,6 +80,27 @@ class top_bar(object):
         self.win.blit(version_ui,(0,0))
         self.win.blit(time_ui,(75,0))
         self.win.blit(market_ui,(175,0))
+
+#win = pygame.display.set_mode((1200,800), pygame.NOFRAME)
+#win.fill((35,35,35))
+
+#pygame.draw.rect(win,(22,22,22),(200,200,800,400))
+#for i in map_img:
+    #win.blit(i,(200,200))
+#menu_bar = top_bar(win,[0,0,1200,15],(186,186,186),ver,"HH:MM:APM")
+
+temp_time = time.time()
+print("Select Continent")
+print(continets)
+c = input(":")
+print("Select Market")
+print(select_market(c))
+smbls = select_index(select_market(c),input(":"))
+
+f_nasdaq()
+#shares = generate_numbers(smbls)
+m = market(smbls)
+
 
 
 
@@ -92,15 +113,27 @@ class top_bar(object):
 ##------------------------------##
 event = pygame.event.get()
 menu_bar = top_bar(win,[0,0,1200,15],(186,186,186),ver,"HH:MM:APM")
-for x in event:
-    if event is pygame.QUIT:
-        pygame.quit()
-        #raise SystemExit
-    else:
-        menu_bar.update(str(time.strftime("%I:%M%p [%S]")),check_market_time())
-        pygame.display.update()
 
+
+
+def update():
+    temp_time = time.time()
+    event = pygame.event.get()
+    for x in event:
+        if event is pygame.QUIT:
+            pygame.quit()
+            raise SystemExit
+    if float(time.time()) >= float(temp_time)+62:
+        update_realtime_prices(m)
+        #print("...Updated Prices...")
+        temp_time = time.time()
+    menu_bar.bar_update(str(time.strftime("%I:%M%p [%S]")),check_market_time())
+    pygame.display.update()
+    
     #raise SystemExit
+
+
+
         
 while(game): #Main while loop to keep the game running 
 
@@ -133,7 +166,8 @@ while(game): #Main while loop to keep the game running
                     indictionary = False
                     inexchange = False
                     instockwatch = True
-    ##          
+    ##
+        update()
         pygame.display.update() #Updates display
 
         
@@ -223,6 +257,7 @@ while(game): #Main while loop to keep the game running
         win.blit(intermediate,(0,scroll_y)) #Prevents the screen from flickering
         pygame.display.flip()
         clock.tick(60)
+        update()
         pygame.display.update()
         ##--------------------------------------------------------------------##
 
@@ -304,7 +339,7 @@ while(game): #Main while loop to keep the game running
                     indictionary = False
                     inexchange = True
 
-                
+        update()        
         pygame.display.update()
         ##---------------------------##
 
@@ -365,7 +400,7 @@ while(game): #Main while loop to keep the game running
                     indictionary = False
                     inexchange = True
         
-        
+        update()
         pygame.display.update() #Update display
 
     while inexchange:
@@ -420,5 +455,7 @@ while(game): #Main while loop to keep the game running
                     indictionary = False
                     inexchange = True
                 
-                
+        update()        
         pygame.display.update()
+        
+raise SystemExit
