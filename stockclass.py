@@ -97,10 +97,7 @@ class Button(object): #Button class that will be used to create a button that ca
     def buttonclick(self,position):
         if (self.buttonrectx + self.buttonrectwidth) >= position[0] >= self.buttonrectx and (self.buttonrecty + self.buttonrectheight) >= position[1] >= self.buttonrecty:
             #print("clicked")
-            return True
-        else:
-            #print("Not clicked")
-            return False
+            return True,self.text
 
     
         
