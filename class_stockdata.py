@@ -1,10 +1,11 @@
 import pygame
 from datetime import datetime
 pygame.init()
-
+#SAVE FILE CLASS FOR WHOLE GAME
 class stock_market(object):
     def __init__(self,data):
         self.data = data
+
     def add_stock(self,stock):
         self.stocks.append(stock)
 
@@ -22,6 +23,9 @@ class accum_stock(object):
         
     def add_data(self,data):
         self.data = data
+
+    def temp_add_data(self,data):
+        self.data.append(data)
 
     def price(self):
         return float(self.info[-1][0])

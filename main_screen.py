@@ -1,17 +1,13 @@
 import pygame
+import os
 from class_stockdata import *
 from class_getindex import *
 import time
-
-
 import os  
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
-
 pygame.init
-
-
 
 #remove window border
 #pygame crashing when looping the update?
@@ -56,6 +52,19 @@ pygame.draw.rect(win,(22,22,22),(200,200,800,400))
 for i in map_img:
     win.blit(i,(200,200))
 menu_bar = top_bar(win,[0,0,1200,15],(186,186,186),ver,"HH:MM:APM")
+
+temp_time = time.time()
+print("Select Continent")
+print(continets)
+c = input(":")
+print("Select Market")
+print(select_market(c))
+smbls = select_index(select_market(c),input(":"))
+
+f_nasdaq()
+#shares = generate_numbers(smbls)
+m = market(smbls)
+
 while True:
     event = pygame.event.get()
     for x in event:
@@ -63,8 +72,10 @@ while True:
             pygame.quit()
             raise SystemExit
         else:
-            pygame.time.delay(1000)
-            update_realtime_prices(m) #update in 10 minute intervals or look up robinhood quote interval
+            if float(time.time()) >= float(temp_time)+62:
+                update_realtime_prices(m)
+                print("...Updated Prices...")
+                temp_time = time.time()
             menu_bar.update(str(time.strftime("%I:%M%p [%S]")),check_market_time())
             pygame.display.update()
     

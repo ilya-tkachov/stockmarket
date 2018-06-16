@@ -8,39 +8,52 @@ from datetime import datetime
 import time
 from pathlib import Path
 
+smbls = 8576
 
 time = print() #realtime time
-smbls = 8576
+
 exclude = ["atest","ntest", "test", "z", "cbx",".","$","HJLI","ZCZZT","ZNWAA"]
 
 market = None #north_america, asia, europe
 
 #https://en.wikipedia.org/wiki/List_of_stock_market_indices
+continets = ["asia","north_america","europe"]
 
-north_america = {"DOWJONES":[],"S&P500":[],"NASDAQ_COMPOSITE":[],"NYSE":[]}
+north_america = {"DOWJONES":"https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average","S&P500":"https://en.wikipedia.org/wiki/List_of_S%26P_500_companies","NYSE_ARCA":"https://en.wikipedia.org/wiki/NYSE_Arca_Major_Market_Index"}#,"NASDAQ_COMPOSITE":[],"NYSE":[]}
 #https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average
 #https://en.wikipedia.org/wiki/NYSE_Arca_Major_Market_Index
 
 asia = {"NIKKEI":[],"TOPIX":[],"HANG_SENG":[],"CSI300":[]}
-europe = {"S&P_EUROPE":[],"EURO_STOXX":[]}
-#https://en.wikipedia.org/wiki/FTSE_Group
-#https://en.wikipedia.org/wiki/FTSE_100_Index
-
-#a = pandas.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
-
-#b = a[0][0][1:].tolist()
-
-#######Automatically retrieve indexes and the stocks inside them
-#######CURRENCY CONVERTER
+europe = {"FTSE":"https://en.wikipedia.org/wiki/FTSE_100_Index","EURO_STOXX":[]}
 
 def select_market(market):
     if market == "north_america":
         return north_america
+    elif market == "europe":
+        return europe
+    elif market == "asia":
+        return asia
 
 def select_index(market,indx):
     for i in market:
         if i == indx:
-           return pandas.read_html(i[market])[0][0][1:].tolist()
+            if indx == "S&P500":
+                g=pandas.read_html(market[i])[0][0][1:100].tolist()
+                return g
+            elif indx == "DOWJONES":
+                g=pandas.read_html(market[i])[1][2][1:].tolist()
+                return g
+            elif indx == "FTSE":
+                g=pandas.read_html(market[i])[2][1][1:].tolist()
+                for i in g:
+                    if "." in g:
+                        g.remove(i)
+                return g
+            elif indx == "NYSE_ARCA":
+                g=pandas.read_html(market[i])[1][0][1:].tolist()
+                g.remove("DD")
+                g.remove("DOW")
+                return g
 
 def trade_currency(value,symbol_from,symbol_to):#measured in one unit
     #https://fred.stlouisfed.org/series/DEXCHUS
@@ -81,24 +94,35 @@ def f_nasdaq():
         #pandas_datareader.robinhood.RobinhoodQuoteReader(str(nasdaq.index[i])).read().to_csv(str(os.getcwd()+"\\_index\\nasdaq\\_shares\\"+str(nasdaq.index[i])+".csv"),header=False,index=False)
         #print("...Retrieved",str(nasdaq.index[i]))
     
-def market():
+def market(shares):
     data = []
     #yearly = False
     print("\n...Creating Stock Market...")
     for i in shares:
-        '''print("\n...Adding",i,"To Stock Market")'''
-        #sx = pandas.read_csv(str(os.getcwd()+"\\_index\\nasdaq\\_shares\\"+str(nasdaq.index[i])+".csv"),index_col=0)
-        '''print("...Getting Quote from Robinhood...")'''
-        rx = pandas_datareader.robinhood.RobinhoodQuoteReader(i).read()
-        rt_price = rx.values[8][0]
-        rt_time = datetime.strptime(str(rx.values[13][0]), "%Y-%m-%dT%H:%M:%SZ")
-        temp_stock = accum_stock(i,rt_price,rt_time,name=nasdaq.ix[i].values[1])
-        data.append(temp_stock)
-        '''print("...Got Quote from Robinhood...")'''
-        '''print("...Ignoring Historical Data...")'''
+        if i.isalpha() == False:
+            print("No")
+        else:
+            print(i)
+            '''print("\n...Adding",i,"To Stock Market")'''
+            #sx = pandas.read_csv(str(os.getcwd()+"\\_index\\nasdaq\\_shares\\"+str(nasdaq.index[i])+".csv"),index_col=0)
+            '''print("...Getting Quote from Robinhood...")'''
+            rx = pandas_datareader.robinhood.RobinhoodQuoteReader(i).read()
+            rt_price = rx.values[8][0]
+            rt_time = datetime.strptime(str(rx.values[13][0]), "%Y-%m-%dT%H:%M:%SZ")
+            temp_stock = accum_stock(i,rt_price,rt_time,name=nasdaq.ix[i].values[1])
+            data.append(temp_stock)
+            '''print("...Got Quote from Robinhood...")'''
+            '''print("...Ignoring Historical Data...")'''
     m = stock_market(data)
     print("\n...Created Stock Market Successfully...")
     return m
+
+def add_ticker(ticker): #call with m.temp_add_data(add_ticker("NVDA"))
+    rx = pandas_datareader.robinhood.RobinhoodQuoteReader(ticker).read()
+    rt_price = rx.values[8][0]
+    rt_time = datetime.strptime(str(rx.values[13][0]), "%Y-%m-%dT%H:%M:%SZ")
+    temp_stock = accum_stock(i,rt_price,rt_time,name=nasdaq.ix[i].values[1])
+    return temp_stock
 
 def fetch_history(temp_stock):
     data = []
@@ -122,7 +146,7 @@ def check_market_time(): #needs to account for US holidays
     cur_time = datetime.utcnow()
     #return False
     if datetime.weekday(cur_time) < 5:
-        if datetime.time(cur_time) > datetime.time(datetime(2017,1,1,1,30,0,0)) and datetime.time(cur_time) < datetime.time(datetime(2017,1,1,20,0,0,0)):
+        if datetime.time(cur_time) > datetime.time(datetime(2017,1,1,13,30,0,0)) and datetime.time(cur_time) < datetime.time(datetime(2017,1,1,20,0,0,0)):
             return True
         else:
             print("datetime")
@@ -146,9 +170,6 @@ def update_realtime_prices(m):
     else:
         print("...Market Closed...")
 
-f_nasdaq()
-shares = generate_numbers(smbls)
-m = market()
 
     
 
