@@ -149,10 +149,10 @@ def check_market_time(): #needs to account for US holidays
         if datetime.time(cur_time) > datetime.time(datetime(2017,1,1,13,30,0,0)) and datetime.time(cur_time) < datetime.time(datetime(2017,1,1,20,0,0,0)):
             return True
         else:
-            print("datetime")
+            #print("datetime")
             return False
     else:
-        print("date")
+        #print("date")
         return False
 
 def update_realtime_prices(m):

@@ -76,7 +76,7 @@ class stock(object): #Initial stock class that will create the visual display of
             
 class Button(object): #Button class that will be used to create a button that can be displayed anywhere and used
 
-    def __init__(self,screen,buttonrect,fillcolor = (69,139,0), text = "", textcolour = (255,0,0),bordercolor = (0,0,0)): #Initializes the key parameters of the button class
+    def __init__ (self,screen,buttonrect,fillcolor = (69,139,0), text = "", textcolour = (255,0,0),bordercolor = (0,0,0),amount = 1,gap = 20): #Initializes the key parameters of the button class
         self.screen = screen
         self.buttonrectx = buttonrect[0]
         self.buttonrecty = buttonrect[1]
@@ -86,18 +86,38 @@ class Button(object): #Button class that will be used to create a button that ca
         self.bordercolor = bordercolor
         self.text = text
         self.textcolour = textcolour
+        self.amount = amount
+        self.gap = gap
+        self.buttoncoord = self.buttoncoordinates()
+
+    def buttoncoordinates(self):
+        buttoncoord = []
+        for i in range(self.amount):
+            xlocation = self.buttonrectx
+            ylocation = self.buttonrecty
+            self.buttonrecty += self.gap
+            buttoncoord.append((xlocation,ylocation))
+        return buttoncoord
+##        pygame.draw.rect(self.screen,self.fillcolor,(self.buttonrectx,self.buttonrecty,self.buttonrectwidth,self.buttonrectheight))
+##        displaytext = pygame.font.SysFont("arial",self.buttonrectheight//2)
+##        buttontextsurface = displaytext.render(self.text,True,self.textcolour)
+##        textsurface_rect = buttontextsurface.get_rect(center= (self.buttonrectx + self.buttonrectwidth//2, self.buttonrecty + self.buttonrectheight//2))
+##        self.screen.blit(buttontextsurface,textsurface_rect)
 
     def createbutton(self):
-        pygame.draw.rect(self.screen,self.fillcolor,(self.buttonrectx,self.buttonrecty,self.buttonrectwidth,self.buttonrectheight))
-        displaytext = pygame.font.SysFont("arial",self.buttonrectheight//2)
-        buttontextsurface = displaytext.render(self.text,True,self.textcolour)
-        textsurface_rect = buttontextsurface.get_rect(center= (self.buttonrectx + self.buttonrectwidth//2, self.buttonrecty + self.buttonrectheight//2))
-        self.screen.blit(buttontextsurface,textsurface_rect)
+        for i in self.buttoncoord:
+            pygame.draw.rect(self.screen,self.fillcolor,(i[0],i[1],self.buttonrectwidth,self.buttonrectheight))
+            displaytext = pygame.font.SysFont("arial",self.buttonrectheight//2)
+            buttontextsurface = displaytext.render(self.text,True,self.textcolour)
+            textsurface_rect = buttontextsurface.get_rect(center= (i[0] + self.buttonrectwidth//2, i[1] + self.buttonrectheight//2))
+            self.screen.blit(buttontextsurface,textsurface_rect)
 
     def buttonclick(self,position):
-        if (self.buttonrectx + self.buttonrectwidth) >= position[0] >= self.buttonrectx and (self.buttonrecty + self.buttonrectheight) >= position[1] >= self.buttonrecty:
-            #print("clicked")
-            return True,self.text
+        for i in self.buttoncoord:
+            if (i[0] + self.buttonrectwidth) >= position[0] >= (i[0]) and (i[1] + self.buttonrectheight) >= position[1] >= (i[1]):
+                print("clicked on",self.buttoncoord.index(i))
+                print(self.text)
+                return True
 
     
         
