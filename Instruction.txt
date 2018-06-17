@@ -1,0 +1,7 @@
+INSTRUCTIONS:
+1. Select a desired continent to enable select stock markets from the region through the python shell. i.e) "north_america"
+2. Determine which market you would like to select and begin viewing. i.e) "DOWJONES"
+3. Select the start button to enter the program
+4. Within the stockwatch menu you will get access to live data that updates every few minutes. You can access select stocks by clicking on them. This
+   will display a visual representation of the data since you last clicked on it. It will also display a table with current information about it.
+5. You can alternate between the stockwatch and dictionary menu anytime. The dictionary menu provides information about each stock that is available to you.
