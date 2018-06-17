@@ -126,7 +126,7 @@ def update():
         if event is pygame.QUIT:
             pygame.quit()
             raise SystemExit
-    if float(time.time()) >= float(temp_time)+62:
+    if float(time.time()) >= float(temp_time)+62: #Change back to 2 seconds (updates)
         update_realtime_prices(m)
         #print("...Updated Prices...")
         temp_time = time.time()
@@ -135,10 +135,10 @@ def update():
     
     #raise SystemExit
 
-def visualdataclick(name):
+def visualdataclick(name,price):
     test = stockclass.stock(win,(500,100,650,300),str(name),RED,0,0) 
     test.createdatadisplay(BLACK) #Creates the rectangle background
-    test.createvisualdata(weeklyoutcome) #Displays the line *weekly outcome is the list of values (refer to top of the code)*
+    test.createvisualdata(price) #Displays the line *weekly outcome is the list of values (refer to top of the code)*
     test.createaxis() #Creates the x and y axis
 
         
@@ -263,7 +263,11 @@ while(game): #Main while loop to keep the game running
             if chosenstock[i] == True: #If the button is clicked
                 #print(stockwatchbuttons[i].getstockname(setposition)) #STOCK NAME
                 stockname = (stockwatchbuttons[i].getstockname(setposition))
-                visualdataclick(stockname[0])
+                g = []
+                for a in m.fetch(stockname[0]).info:
+                    g.append(float(a[0]))
+                print(g)
+                visualdataclick(stockname[0],g)
 
 
                 

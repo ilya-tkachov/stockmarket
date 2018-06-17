@@ -33,7 +33,7 @@ class stock(object): #Initial stock class that will create the visual display of
                 d = -1 * d 
             elif d > 0 and i > 0:
                 d = -1 * d 
-            length = self.rectwidth// 56#Length of each drawn line
+            length = self.rectwidth// 40#Length of each drawn line
             x2 = int(x+length*math.cos(d)) #Determines the end points of the line being drawn
             y2 = int(y+length*math.sin(d))
             if y2 < self.recty: #Prevents the line from drawing outside of the rectangle
@@ -54,7 +54,7 @@ class stock(object): #Initial stock class that will create the visual display of
         ylocation =  self.recty + self.rectheight #The y location for the values in the x axis
         newylocation = self.recty + self.rectheight #The y locationn for the values in the y axis
         xlist = [] #Empty list that represents the weeks in the year
-        for i in range(0,53,4):
+        for i in range(0,16,1):
             xlist.append(i) #Creates the list of weeks in the year from 0-52
         for z in xlist: #Iterates through the numbers in the list for the x axis
             companyxaxis = pygame.font.SysFont("arial",self.rectwidth // 24) #Initializes the font and size for the x axis components
