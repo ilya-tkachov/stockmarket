@@ -74,7 +74,7 @@ while True:
         else:
             if float(time.time()) >= float(temp_time)+62:
                 update_realtime_prices(m)
-                #print("...Updated Prices...")
+                print("...Updated Prices...")
                 temp_time = time.time()
             menu_bar.update(str(time.strftime("%I:%M%p [%S]")),check_market_time())
             pygame.display.update()

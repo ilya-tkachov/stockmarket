@@ -40,7 +40,7 @@ class accum_stock(object):
 
     def chg(self,chg): #for statistical purposes
         if chg == "now":
-            return self.price()/float(self.info[-2][0])
+            return self.price()-float(self.info[-2][0])
         elif chg == "1d":
             return self.price()-self.data[-1].close_price
         elif chg == "year":
@@ -50,7 +50,8 @@ class accum_stock(object):
                 return "-"+str(((self.data[0].close_price-self.price())/self.data[0].close_price)*100)
             
     def update(self,p,t):
-        self.info.append([p,t])
+        if self.info[-1] != [p,t]:
+            self.info.append([p,t])
     
     def __str__(self):
         return self.ticker
