@@ -35,6 +35,7 @@ intermediate.fill(GREY)
 mainlogo = pygame.image.load("logo.jpg")
 clickedname = None
 stockwatchbuttons =[]
+chosenstock = []
 #WINDOW AND WHILE LOOP VARIABLES
 
 
@@ -135,7 +136,7 @@ def update():
     #raise SystemExit
 
 def visualdataclick(name):
-    test = stockclass.stock(intermediate,(500,100,650,300),str(name),RED,0,0) 
+    test = stockclass.stock(win,(500,100,650,300),str(name),RED,0,0) 
     test.createdatadisplay(BLACK) #Creates the rectangle background
     test.createvisualdata(weeklyoutcome) #Displays the line *weekly outcome is the list of values (refer to top of the code)*
     test.createaxis() #Creates the x and y axis
@@ -200,6 +201,8 @@ while(game): #Main while loop to keep the game running
         ##--------------------------------------------------------------------------------------##
         for z in range(len(m.data)):
             stockwatchbuttons.append(("Button" + str("i"*z)))
+        for q in range(len(m.data)):
+            chosenstock.append(("Stock"+str("i"*q)))
         for i in range (len(m.data)): 
             stockwatchbuttons[i] = stockclass.Button(win,(20,100 + i *100,270,70),BLACK,m.data[i].ticker,WHITE,(0,0,0),1,100)
             stockwatchbuttons[i].createbutton()
@@ -229,8 +232,9 @@ while(game): #Main while loop to keep the game running
                 clickexchange = (Exchange.buttonclick(setposition))
                 #testbutton.buttonclick(setposition)
                 for q in range(len(m.data)):
-                    (stockwatchbuttons[q]).buttonclick(setposition)
-                    stockbutton = (stockwatchbuttons[q]).buttonclick(setposition)
+                    (stockwatchbuttons[q]).buttonclick(setposition) #Checks for button click on each stock
+                    chosenstock[q] = (stockwatchbuttons[q]).buttonclick(setposition) #sets a unique variable equal to the button click
+                    stockwatchbuttons[q].getstockname(setposition) #Gets the name of the stock
                 if clickaccount == True: #If the account button was clicked access the account while loop only
                     instockwatch = False
                     inmenu = False
@@ -255,7 +259,14 @@ while(game): #Main while loop to keep the game running
                     inaccount = False
                     indictionary = False
                     inexchange= True
-                    
+        for i in range(len(m.data)):
+            if chosenstock[i] == True: #If the button is clicked
+                #print(stockwatchbuttons[i].getstockname(setposition)) #STOCK NAME
+                stockname = (stockwatchbuttons[i].getstockname(setposition))
+                visualdataclick(stockname[0])
+
+
+                
 
 ##                    
 ##                if event.button == 4: #Events to scroll through the window

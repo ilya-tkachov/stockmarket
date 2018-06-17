@@ -116,8 +116,14 @@ class Button(object): #Button class that will be used to create a button that ca
         for i in self.buttoncoord:
             if (i[0] + self.buttonrectwidth) >= position[0] >= (i[0]) and (i[1] + self.buttonrectheight) >= position[1] >= (i[1]):
                 print("clicked on",self.buttoncoord.index(i))
-                print(self.text)
                 return True
+
+    def getstockname(self,position):
+        for i in self.buttoncoord:
+            if (i[0] + self.buttonrectwidth) >= position[0] >= (i[0]) and (i[1] + self.buttonrectheight) >= position[1] >= (i[1]):
+                #print("clicked on",self.buttoncoord.index(i))
+                #print(self.text)
+                return [self.text]
 
     
         
